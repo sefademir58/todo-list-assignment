@@ -10,17 +10,18 @@ function TodoForm(props) {
 
   useEffect(() => {
     setPopup(props.popup)
+    console.log(props)
   }, [props])
 
   return (
     <div className='todo-form'>
-        {props.edit ? null : (
-            <button className='todo-button' onClick={addTodo}>
-            {'Todo Ekle'}
-            </button>
-        )}
+      {props.edit ? null : (
+        <button className='todo-button' onClick={addTodo}>
+          {'Todo Ekle'}
+        </button>
+      )}
 
-        {popup && <Popup setPopup={setPopup} {...props} />}
+      {popup && <Popup setPopup={setPopup} {...props} />}
     </div>
   )
 }

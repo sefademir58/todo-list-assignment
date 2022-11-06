@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import TodoForm from './TodoForm'
-import TodoItem from './TodoItem'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { TodoForm, TodoItem, Nav } from '.'
+import Globals from '../globals'
 
 const reorder = (todo, startIndex, endIndex) => {
   const result = Array.from(todo)
@@ -11,85 +11,68 @@ const reorder = (todo, startIndex, endIndex) => {
   return result
 }
 
-function TodoList() {
+function TodoList(props) {
   const [todos, setTodos] = useState([
     { id: 1, text: 'test', info: 'deneme' },
     { id: 2, text: 'tdasst', info: 'as' },
   ])
 
+  const serviceURL = 'https://localhost:8000/api/'
+
   useEffect(() => {
-    // istek atılan yer düzenlenecek
-    // fetch('https://localhost/api/todo/get')
-    //   .then(todo => {
-    //     if (todo && todo.length > 0) {
-    //       todo.map(res => {
-    //         setTodos([...todos, res])
-    //       })
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err, 'Todo getirilemedi')
-    //   })
+    fetch(`${serviceURL}list`, {
+      method: 'GET',
+      body: JSON.stringify({ 'id': Globals.userId }),
+    })
+      .then(response => response.json())
+      .then(todo => {
+        if (todo && todo.length > 0) {
+          todo.map(res => {
+            setTodos([...todos, res])
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err, 'Todo getirilemedi')
+      })
   }, [])
 
-  const addTodo = todo => {
-    if (!todo.text || /^\s*$/.test(todo.text)) {
-      return
-    }
+  useEffect(() => {
+    console.log(props.history)
+  }, [props])
 
-    // fetch('https://localhost/api/todo/add')
-    //   .then(todo => {
-    //     if (todo && todo.length > 0) {
-    //       todo.map(res => {
-    //         setTodos([...todos, res])
-    //       })
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err, 'Todo eklenemedi')
-    //   })
-  }
-
-  const updateTodo = (todoId, newTitleValue, newInfoValue) => {
-    if (!newTitleValue.text || /^\s*$/.test(newTitleValue.text) || !newInfoValue.text || /^\s*$/.test(newInfoValue.text)) {
-      return
-    }
-
-    // fetch(`https://localhost/api/todo/${todoId}`)
-    //   .then(todo => {
-    //     if (todo) {
-    //       setTodos(prev => prev.map(item => (item.id === todoId ? newTitleValue : item)))
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err, 'Todo güncellenemedi')
-    //   })
-  }
   const removeTodo = id => {
-    // fetch(`https://localhost/api/todo/5ddcd1566b55da0017597239`)
-    //   .then(todo => {
-    //     if (todo) {
-    //       const removeArr = [...todos].filter(todo => todo.id !== id)
-    //       setTodos(removeArr)
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err, 'Todo güncellenemedi')
-    //   })
+    fetch(`${serviceURL}delete/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(todo => {
+        if (todo) {
+          const removeArr = [...todos].filter(todo => todo.id !== id)
+          setTodos(removeArr)
+        }
+      })
+      .catch(err => {
+        console.log(err, 'Todo güncellenemedi')
+      })
   }
 
-  const completeTodo = todoId => {
-    // fetch(`https:/localhost/api/todo/${todoId}?completed=true`).then(todoCompleted => {
-    //   if (todoCompleted) {
-    //     let updatedTodos = todos.map(todo => {
-    //       if (todo.todoId === todoId) {
-    //         todo.isComplete = !todo.isComplete
-    //       }
-    //       return todo
-    //     })
-    //     setTodos(updatedTodos)
-    //   }
-    // })
+  const completeTodo = (todoId, completed) => {
+    fetch(`${serviceURL}${todoId}?completed=${completed}`, {
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then(todoCompleted => {
+        if (todoCompleted) {
+          let updatedTodos = todos.map(todo => {
+            if (todo.todoId === todoId) {
+              todo.isComplete = !todo.isComplete
+            }
+            return todo
+          })
+          setTodos(updatedTodos)
+        }
+      })
   }
   const onDragEnd = result => {
     if (!result.destination) {
@@ -100,29 +83,27 @@ function TodoList() {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='droppable'>
-        {provided => (
-          <div ref={provided.innerRef}>
-            <div className='todo-header'>
-              <h1>Yapılacaklar Listesi</h1>
-              <TodoForm onSubmit={addTodo} />
-            </div>
-            {todos.map((todo, index) => (
-              <TodoItem
-                todo={todo}
-                key={todo.id}
-                index={index}
-                completeTodo={completeTodo}
-                removeTodo={removeTodo}
-                updateTodo={updateTodo}
-              />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div className='todo'>
+      <Nav {...props} />
+      <div className='todo-app'>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId='droppable'>
+            {provided => (
+              <div ref={provided.innerRef}>
+                <div className='todo-header'>
+                  <h1>Yapılacaklar Listesi</h1>
+                  <TodoForm />
+                </div>
+                {todos.map((todo, index) => (
+                  <TodoItem todo={todo} key={todo.id} index={index} completeTodo={completeTodo} removeTodo={removeTodo} />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+    </div>
   )
 }
 

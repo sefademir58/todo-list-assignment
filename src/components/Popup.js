@@ -8,27 +8,56 @@ const Popup = props => {
   const inputRef = useRef(null)
   const infoinputRef = useRef(null)
 
+  const serviceURL = 'https://localhost:8000/api/'
+
   useEffect(() => {
     inputRef.current.focus()
- 
+
     if (props.edit) {
-        setInput(props.edit.titleValue)
-        setInfoInput(props.edit.infoValue)
-      }
-    }, [])
+      setInput(props.edit.titleValue)
+      setInfoInput(props.edit.infoValue)
+    }
+  }, [])
 
   const handleChange = e => {
     setInput(e.target.value)
   }
 
-  const saveTodo = () => {
+  const addTodo = todo => {
     var title = inputRef.current.value
     var info = infoinputRef.current.value
 
     if (!title || /^\s*$/.test(title) || !info || /^\s*$/.test(info)) {
       return
     }
-    setPopup(false)
+
+    fetch(`${serviceURL}add`)
+      .then(todo => {
+        if (todo && todo.length > 0) {
+          setPopup(false)
+        }
+      })
+      .catch(err => {
+        console.log(err, 'Todo eklenemedi')
+      })
+  }
+
+  const updateTodo = () => {
+    var title = inputRef.current.value
+    var info = infoinputRef.current.value
+    if (!title || /^\s*$/.test(title) || !info || /^\s*$/.test(info)) {
+      return
+    }
+
+    fetch(`${serviceURL}edit/${props.edit.id}`)
+      .then(todo => {
+        if (todo) {
+          setPopup(false)
+        }
+      })
+      .catch(err => {
+        console.log(err, 'Todo güncellenemedi')
+      })
   }
 
   const handleInfoChange = e => {
@@ -39,7 +68,7 @@ const Popup = props => {
     <div className='popup'>
       <div className='popup-container'>
         <div className='popup-header'>
-        <span>{props.edit ? 'TODO Güncelleme' : 'TODO Ekle'}</span>
+          <span>{props.edit ? 'TODO Güncelleme' : 'TODO Ekle'}</span>
           <button className='close-popup' onClick={() => setPopup(false)}>
             X
           </button>
@@ -71,7 +100,7 @@ const Popup = props => {
           </div>
         </div>
         <div className='popup-footer'>
-          <button onClick={saveTodo}> Kaydet</button>
+          {props.edit ? <button onClick={updateTodo}>Güncelle</button> : <button onClick={addTodo}>Kaydet</button>}
         </div>
       </div>
     </div>

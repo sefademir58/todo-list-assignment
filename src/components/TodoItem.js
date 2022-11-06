@@ -4,22 +4,20 @@ import { RiCloseCircleLine } from 'react-icons/ri'
 import { TiEdit } from 'react-icons/ti'
 import { Draggable } from 'react-beautiful-dnd'
 
-function Todo({ todo, index, completeTodo, removeTodo, updateTodo }) {
+function Todo({ todo, index, completeTodo, removeTodo }) {
   const [edit, setEdit] = useState({
     id: null,
     titleValue: '',
     infoValue: '',
   })
-  const submitUpdate = (titleValue, infoValue) => {
-    updateTodo(edit.id, titleValue, infoValue)
+
+  const submitUpdate = () => {
     setEdit({
       id: null,
       titleValue: '',
       infoValue: '',
     })
   }
-
-  console.log(todo.id)
 
   return (
     <>
