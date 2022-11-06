@@ -91,6 +91,7 @@ h1 {
   padding: 16px;
   border-radius: 5px;
   width: 90%;
+  user-select: none;
 }
 
 .info {
@@ -181,7 +182,7 @@ justify-content: space-between;
 padding: 8px;
 }
 .popup-header span {
-  color: #343434;
+color: #343434;
 }
 
 .close-popup {
@@ -210,8 +211,8 @@ flex-direction: column;
 }
 
 .popup-content-title {
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 }
 
 .popup-content-title span{
