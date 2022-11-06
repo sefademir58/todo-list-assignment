@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import { TodoForm, TodoItem } from '.'
+import { TodoForm, TodoItem, Nav } from '.'
 import Globals from '../globals'
 
 const reorder = (todo, startIndex, endIndex) => {
@@ -83,23 +83,26 @@ function TodoList(props) {
   }
 
   return (
-    <div className='todo-app'>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId='droppable'>
-          {provided => (
-            <div ref={provided.innerRef}>
-              <div className='todo-header'>
-                <h1>Yapılacaklar Listesi</h1>
-                <TodoForm />
+    <div className='todo'>
+      <Nav {...props} />
+      <div className='todo-app'>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId='droppable'>
+            {provided => (
+              <div ref={provided.innerRef}>
+                <div className='todo-header'>
+                  <h1>Yapılacaklar Listesi</h1>
+                  <TodoForm />
+                </div>
+                {todos.map((todo, index) => (
+                  <TodoItem todo={todo} key={todo.id} index={index} completeTodo={completeTodo} removeTodo={removeTodo} />
+                ))}
+                {provided.placeholder}
               </div>
-              {todos.map((todo, index) => (
-                <TodoItem todo={todo} key={todo.id} index={index} completeTodo={completeTodo} removeTodo={removeTodo} />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   )
 }
