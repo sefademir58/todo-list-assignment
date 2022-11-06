@@ -1,41 +1,83 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TodoForm from './TodoForm'
 import Todo from './Todo'
 
 function TodoList() {
-  const [todos, setTodos] = useState([])
+    const [todos, setTodos] = useState([{ id: Math.random(), text: 'test', info: 'deneme' }])
+
+    useEffect(() => {
+      // istek atılan yer düzenlenecek
+      // fetch('https://localhost/api/todo/get')
+      //   .then(todo => {
+      //     if (todo && todo.length > 0) {
+      //       todo.map(res => {
+      //         setTodos([...todos, res])
+      //       })
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err, 'Todo getirilemedi')
+      //   })
+    }, [])
 
   const addTodo = todo => {
     if (!todo.text || /^\s*$/.test(todo.text)) {
       return
     }
 
-    const newTodos = [todo, ...todos]
-
-    setTodos(newTodos)
+     // fetch('https://localhost/api/todo/add')
+    //   .then(todo => {
+    //     if (todo && todo.length > 0) {
+    //       todo.map(res => {
+    //         setTodos([...todos, res])
+    //       })
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err, 'Todo eklenemedi')
+    //   })
   }
 
-  const updateTodo = (todoId, newValue) => {
-    if (!newValue.text || /^\s*$/.test(newValue.text)) {
+  const updateTodo = (todoId, newTitleValue, newInfoValue) => {
+    if (!newTitleValue.text || /^\s*$/.test(newTitleValue.text) || !newInfoValue.text || /^\s*$/.test(newInfoValue.text)) {
       return
     }
 
-    setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)))
+   // fetch(`https://localhost/api/todo/${todoId}`)
+    //   .then(todo => {
+    //     if (todo) {
+    //       setTodos(prev => prev.map(item => (item.id === todoId ? newTitleValue : item)))
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err, 'Todo güncellenemedi')
+    //   })
   }
   const removeTodo = id => {
-    const removeArr = [...todos].filter(todo => todo.id !== id)
-    setTodos(removeArr)
+   // fetch(`https://localhost/api/todo/5ddcd1566b55da0017597239`)
+    //   .then(todo => {
+    //     if (todo) {
+    //       const removeArr = [...todos].filter(todo => todo.id !== id)
+    //       setTodos(removeArr)
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err, 'Todo güncellenemedi')
+    //   })
   }
 
-  const completeTodo = id => {
-    console.log(id)
-    let updatedTodos = todos.map(todo => {
-      if (todo.id === id) {
-        todo.isComplete = !todo.isComplete
-      }
-      return todo
-    })
-    setTodos(updatedTodos)
+  const completeTodo = todoId => {
+    // fetch(`https:/localhost/api/todo/${todoId}?completed=true`).then(todoCompleted => {
+    //   if (todoCompleted) {
+    //     let updatedTodos = todos.map(todo => {
+    //       if (todo.todoId === todoId) {
+    //         todo.isComplete = !todo.isComplete
+    //       }
+    //       return todo
+    //     })
+    //     setTodos(updatedTodos)
+    //   }
+    // })
   }
 
   return (

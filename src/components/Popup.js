@@ -10,15 +10,25 @@ const Popup = props => {
 
   useEffect(() => {
     inputRef.current.focus()
-  })
+ 
+    if (props.edit) {
+        setInput(props.edit.titleValue)
+        setInfoInput(props.edit.infoValue)
+      }
+    }, [])
 
   const handleChange = e => {
     setInput(e.target.value)
   }
 
   const saveTodo = () => {
-    console.log('test')
-    // backende istek atılacak
+    var title = inputRef.current.value
+    var info = infoinputRef.current.value
+
+    if (!title || /^\s*$/.test(title) || !info || /^\s*$/.test(info)) {
+      return
+    }
+    setPopup(false)
   }
 
   const handleInfoChange = e => {
@@ -29,7 +39,7 @@ const Popup = props => {
     <div className='popup'>
       <div className='popup-container'>
         <div className='popup-header'>
-          <span>TODO Ekle</span>
+        <span>{props.edit ? 'TODO Güncelleme' : 'TODO Ekle'}</span>
           <button className='close-popup' onClick={() => setPopup(false)}>
             X
           </button>
@@ -41,7 +51,7 @@ const Popup = props => {
               type='text'
               className='todo-input'
               placeholder='Başlık'
-              value={input}
+              defaultValue={input}
               name='text'
               onChange={handleChange}
               ref={inputRef}
@@ -51,11 +61,12 @@ const Popup = props => {
             <span>İçerik</span>
             <textarea
               type='text'
-              placeholder='Başlık'
-              value={infoInput}
+              placeholder='İçerik'
+              defaultValue={infoInput}
               onChange={handleInfoChange}
               name='text'
               ref={infoinputRef}
+              className='info-textarea'
             />
           </div>
         </div>
