@@ -52,8 +52,8 @@ export default function Login(props) {
     let data = {
       username: user,
       password: pass,
-      fisrtname: name,
-      lastname: surname,
+      name: name,
+      surname: surname,
     }
 
     // fetch(`https://localhost:8000/api/register`, {

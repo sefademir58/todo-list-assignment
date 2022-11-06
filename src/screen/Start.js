@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
-export default function Start(props) {
+export default function Start() {
+  const history = useHistory()
   useEffect(() => {
     if (window.location.hash === '#/') {
-      props.history.push('/login')
+      history.push('/login')
     }
   }, [])
 

@@ -12,40 +12,6 @@ body {
   align-items: center;
   height: 100vh;
 }
-
-.todo {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.navbar-container {
-  padding: 10px;
-  height: 70px;
-  width: 100%;
-  background: #e2e2e2;
-  margin-bottom: 30px;
-  color: #555;
-  font-size: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.navbar-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.navbar-icons {
-  display: flex;
-  flex-direction: row;
-}
-
 .todo-app {
   display: flex;
   flex-direction: column;
